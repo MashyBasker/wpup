@@ -29,11 +29,12 @@ func main() {
 
 	// get the list of all the files
 	fileList := ListFiles(wpDir)
-	// fmt.Println(fileList)
+	
 	// send the files to specified discord channel
 	for _, e := range(fileList) {
 		SendFile(e, val)
-		fmt.Printf("✅ %s has been sent\n", strings.Split(e, "/")[len(fileList)-1])
+		pathSplit := strings.Split(e, "/")
+		fmt.Printf("✅ %s has been sent\n", pathSplit[len(pathSplit)-1])
 	}
 	fmt.Println("Files have been sent successfully 🔥")
 }
@@ -54,7 +55,8 @@ func SendFile(filePath string, WebhookUrl string) error {
 	writer := multipart.NewWriter(body)
 
 	// create new form file field
-	part, err := writer.CreateFormFile("file", filePath)
+	pathSplit := strings.Split(filePath, "/")
+	part, err := writer.CreateFormFile("file", pathSplit[len(pathSplit)-1])
 	if err != nil {
 		log.Fatal("[ERR] Could not create the form file")
 		return err
