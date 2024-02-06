@@ -1,10 +1,10 @@
 # wpup
 
-I like to curate wallpapers, but they take up a lot of disk space. So I started storing them in my discord server and created this tool to automate the whole process
+I like to curate wallpapers, but they take up a lot of disk space. So I started storing them in my discord server and created this tool to automate the whole process.
 
 ## Quickstart
 
-You need to have the Go compiler and Git installed
+You need to have the [Go](https://go.dev/doc/install) compiler and [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed.
 
 
 ### Installation
@@ -13,7 +13,7 @@ You need to have the Go compiler and Git installed
 $ git clone https://github.com/MashyBasker/wpup
 $ cd wpup
 $ go build
-$ cp wpup ~/.local/bin
+$ cp wpup ~/.local/bin/
 ```
 
 ### Setting the discord webhook URL

@@ -39,6 +39,16 @@ func main() {
 	fmt.Println("Files have been sent successfully 🔥")
 }
 
+/*
+
+@params: path to a file, webhook URL of a discord channel
+@description: takes the path to a file and sends the file to a
+				discord channel via a Http POST request
+
+Implementation inspired from this code: 
+https://github.com/gtuk/discordwebhook/blob/main/discordwebhook.go
+
+*/
 func SendFile(filePath string, WebhookUrl string) error {
 	// open the file you want to upload
 	file, err := os.Open(filePath)
@@ -86,6 +96,13 @@ func SendFile(filePath string, WebhookUrl string) error {
 	return nil
 }
 
+/*
+
+@params: path to a directory
+@description: takes the path to a directory as a string and returns
+				a list of the absolute paths of all the files in the directory
+
+*/
 func ListFiles(dirPath string) []string{
 	// expland tilde path to absolute path
 	user, err := user.Current()
