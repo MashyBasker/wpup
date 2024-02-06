@@ -20,19 +20,19 @@ jobs:
           with:
             fetch-depth: 0
         
-        - name: Get previous tag
+        - name: 'Get previous tag'
           id: previoustag
-          uses: WyriHaximus/github-action-get-previous-tag@v1
+          uses: "WyriHaximus/github-action-get-previous-tag@v1"
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: Get next minor version
+        - name: 'Get next minor version'
           id: semver
-          uses: WyriHaximus/github-action-next-semvers@v1
+          uses: "WyriHaximus/github-action-next-semvers@v1"
           with:
             version: ${{ steps.previoustag.outputs.tag }}
         
-        - name: Create release
+        - name: 'Create release'
           id: create_release
           uses: actions/create-release@v1
           env:
