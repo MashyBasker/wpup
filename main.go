@@ -32,7 +32,10 @@ func main() {
 
 	// send the files to specified discord channel
 	for _, e := range fileList {
-		SendFile(e, val)
+		err := SendFile(e, val)
+		if err != nil {
+			log.Fatal("[ERR] Could not send file")
+		}
 		pathSplit := strings.Split(e, "/")
 		fmt.Printf("✅ %s has been sent\n", pathSplit[len(pathSplit)-1])
 	}
