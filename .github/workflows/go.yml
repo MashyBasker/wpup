@@ -5,7 +5,7 @@ on:
         branches:
         - main
 permissions:
-    contents: read
+    contents: write
     id-token: write
 jobs:
     build:
@@ -50,6 +50,7 @@ jobs:
                   Changes in this release
                   - First Change
                   - Second Change
+                
                 draft: false
                 prerelease: false
 
