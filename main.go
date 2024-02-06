@@ -16,7 +16,7 @@ import (
 func main() {
 	// read the directory path from command-line parameters
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: wpup <directory path>")
+		fmt.Println("Usage: wpup /path/to/directory")
 		os.Exit(0)
 	}
 	wpDir := os.Args[1]
@@ -25,13 +25,13 @@ func main() {
 	val, present := os.LookupEnv("DISCORD_WEBHOOK")
 	if !present {
 		log.Fatal("[ERR] Webhook environment variable is not set")
-	} 
+	}
 
 	// get the list of all the files
 	fileList := ListFiles(wpDir)
-	
+
 	// send the files to specified discord channel
-	for _, e := range(fileList) {
+	for _, e := range fileList {
 		SendFile(e, val)
 		pathSplit := strings.Split(e, "/")
 		fmt.Printf("✅ %s has been sent\n", pathSplit[len(pathSplit)-1])
@@ -40,14 +40,12 @@ func main() {
 }
 
 /*
-
 @params: path to a file, webhook URL of a discord channel
 @description: takes the path to a file and sends the file to a
-				discord channel via a Http POST request
+discord channel via a Http POST request
 
-Implementation inspired from this code: 
+Implementation inspired from this code:
 https://github.com/gtuk/discordwebhook/blob/main/discordwebhook.go
-
 */
 func SendFile(filePath string, WebhookUrl string) error {
 	// open the file you want to upload
@@ -97,13 +95,11 @@ func SendFile(filePath string, WebhookUrl string) error {
 }
 
 /*
-
 @params: path to a directory
 @description: takes the path to a directory as a string and returns
-				a list of the absolute paths of all the files in the directory
-
+a list of the absolute paths of all the files in the directory
 */
-func ListFiles(dirPath string) []string{
+func ListFiles(dirPath string) []string {
 	// expland tilde path to absolute path
 	user, err := user.Current()
 	if err != nil {
@@ -127,7 +123,7 @@ func ListFiles(dirPath string) []string{
 	// filter all the files into a slice
 	for _, e := range entries {
 		if !e.IsDir() {
-			fileList = append(fileList, dirPath +"/"+ e.Name())
+			fileList = append(fileList, dirPath+"/"+e.Name())
 		}
 	}
 	return fileList
