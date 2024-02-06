@@ -2,16 +2,40 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
-	"mime/multipart"
-	"fmt"
+	"os/user"
+	"path/filepath"
+	"strings"
 )
 
 func main() {
-	fmt.Println("Hello world")
+	// read the directory path from command-line parameters
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: wpup <directory path>")
+		os.Exit(0)
+	}
+	wpDir := os.Args[1]
+
+	// get the channel webhook URL from the environment variables
+	val, present := os.LookupEnv("DISCORD_WEBHOOK")
+	if !present {
+		log.Fatal("[ERR] Webhook environment variable is not set")
+	} 
+
+	// get the list of all the files
+	fileList := ListFiles(wpDir)
+	// fmt.Println(fileList)
+	// send the files to specified discord channel
+	for _, e := range(fileList) {
+		SendFile(e, val)
+		fmt.Printf("✅ %s has been sent\n", strings.Split(e, "/")[len(fileList)-1])
+	}
+	fmt.Println("Files have been sent successfully 🔥")
 }
 
 func SendFile(filePath string, WebhookUrl string) error {
@@ -60,4 +84,32 @@ func SendFile(filePath string, WebhookUrl string) error {
 	return nil
 }
 
+func ListFiles(dirPath string) []string{
+	// expland tilde path to absolute path
+	user, err := user.Current()
+	if err != nil {
+		log.Fatal("[ERR] Could not get username", err)
+	}
+	homeDir := user.HomeDir
+	if dirPath == "~" {
+		dirPath = homeDir
+	} else if strings.HasPrefix(dirPath, "~/") {
+		dirPath = filepath.Join(homeDir, dirPath[2:])
+	}
 
+	// read contents of the dir into a list
+	entries, err := os.ReadDir(dirPath)
+	if err != nil {
+		log.Fatal("[ERR] Could not read directory")
+	}
+
+	var fileList []string
+
+	// filter all the files into a slice
+	for _, e := range entries {
+		if !e.IsDir() {
+			fileList = append(fileList, dirPath +"/"+ e.Name())
+		}
+	}
+	return fileList
+}
