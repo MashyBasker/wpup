@@ -16,7 +16,22 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - name: Checkout code
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+        
+        - name: Get previous tag
+          id: previoustag
+          uses: 'WyriHaximus/github-action-get-previous-tag@v1'
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Get next minor version
+          id: semver
+          uses: 'WyriHaximus/github-action-next-semvers@v1'
+          with:
+            version: ${{ steps.previoustag.outputs.tag }}
+        
         - name: Create release
           id: create_release
           uses: actions/create-release@v1
@@ -24,6 +39,6 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             tag_name: ${{ github.run_number }}
-            release_name: Release ${{ github.ref }}
+            release_name: ${{ steps.semver.outputs.patch }}
             draft: false
             prerelease: false
